@@ -117,7 +117,7 @@ public class UserController {
         if (username != null && password != null) {
             return ResponseEntity.ok(userService.trovaUtenti(username, password));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse("Username e password sono inesistenti"));
         }
     }
 

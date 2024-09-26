@@ -1,5 +1,20 @@
 package it.smartchain.primoesempio.controllers;
 
+import java.util.NoSuchElementException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import it.smartchain.primoesempio.dtos.CartellaClinicaDTO;
 import it.smartchain.primoesempio.dtos.UtentiDTO;
 import it.smartchain.primoesempio.exceptions.CartellaClinicaException;
@@ -7,13 +22,6 @@ import it.smartchain.primoesempio.services.CartellaService;
 import it.smartchain.primoesempio.services.UserService;
 import it.smartchain.primoesempio.utilities.AngularErrorResponse;
 import jakarta.persistence.EntityExistsException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/cartella")
