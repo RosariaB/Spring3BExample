@@ -8,23 +8,33 @@ public class Builders {
     public static AmministratoreDTO entityToDTO(Amministratore amministratore){
         AmministratoreDTO amministratoreDTO = new AmministratoreDTO();
         amministratoreDTO.setId(amministratore.getId());
-        amministratoreDTO.setUser(Builders.entityToDTO(amministratore.getUser()));
+        if(amministratore.getUser() != null){
+            amministratoreDTO.setUser(Builders.entityToDTO(amministratore.getUser()));
+        }
         return amministratoreDTO;
     }
 
     public static Amministratore DTOToEntity(AmministratoreDTO amministratoreDTO){
         Amministratore amministratore = new Amministratore();
         amministratore.setId(amministratoreDTO.getId());
-        amministratore.setUser(Builders.DTOToEntity(amministratoreDTO.getUser()));
+        if(amministratoreDTO.getUser() != null) {
+            amministratore.setUser(Builders.DTOToEntity(amministratoreDTO.getUser()));
+        }
         return amministratore;
     }
 
     public static CartellaClinicaDTO entityToDTO(CartellaClinica cartellaClinica) {
         CartellaClinicaDTO cartellaClinicaDTO = new CartellaClinicaDTO();
         cartellaClinicaDTO.setId(cartellaClinica.getId());
-        cartellaClinicaDTO.setMedicoDTO(Builders.entityToDTO(cartellaClinica.getMedico()));
-        cartellaClinicaDTO.setPazienteDTO(Builders.entityToDTO(cartellaClinica.getPaziente()));
-        cartellaClinicaDTO.setDati(cartellaClinica.getDati().stream().map(Builders::entityToDTO).toList());
+        if(cartellaClinica.getMedico() != null){
+            cartellaClinicaDTO.setMedicoDTO(Builders.entityToDTO(cartellaClinica.getMedico()));
+        }
+        if(cartellaClinica.getPaziente() != null) {
+            cartellaClinicaDTO.setPazienteDTO(Builders.entityToDTO(cartellaClinica.getPaziente()));
+        }
+        if(cartellaClinica.getDati()!= null && !cartellaClinica.getDati().isEmpty()) {
+            cartellaClinicaDTO.setDati(cartellaClinica.getDati().stream().map(Builders::entityToDTO).toList());
+        }
         return cartellaClinicaDTO;
 
     }
@@ -32,8 +42,12 @@ public class Builders {
     public static CartellaClinica DTOToEntity(CartellaClinicaDTO cartellaClinicaDTO) {
         CartellaClinica cartellaClinica = new CartellaClinica();
         cartellaClinica.setId(cartellaClinicaDTO.getId());
-        cartellaClinica.setMedico(Builders.DTOToEntity(cartellaClinicaDTO.getMedicoDTO()));
-        cartellaClinica.setPaziente(Builders.DTOToEntity(cartellaClinicaDTO.getPazienteDTO()));
+        if(cartellaClinicaDTO.getMedicoDTO() != null) {
+            cartellaClinica.setMedico(Builders.DTOToEntity(cartellaClinicaDTO.getMedicoDTO()));
+        }
+        if(cartellaClinicaDTO.getPazienteDTO()!= null) {
+            cartellaClinica.setPaziente(Builders.DTOToEntity(cartellaClinicaDTO.getPazienteDTO()));
+        }
         return cartellaClinica;
 
     }
@@ -44,7 +58,9 @@ public class Builders {
         datoDTO.setReparto(dato.getReparto());
         datoDTO.setDiagnosi(dato.getDiagnosi());
         datoDTO.setTerapia(dato.getTerapia());
-        datoDTO.setImmagini(dato.getImmagini().stream().map(Builders::entityToDTO).toList());
+        if(dato.getImmagini() != null && !dato.getImmagini().isEmpty()) {
+            datoDTO.setImmagini(dato.getImmagini().stream().map(Builders::entityToDTO).toList());
+        }
         return datoDTO;
     }
 
@@ -104,7 +120,9 @@ public class Builders {
         medicoDTO.setId(medico.getId());
         medicoDTO.setNome(medico.getNome());
         medicoDTO.setCognome(medico.getCognome());
-        medicoDTO.setUserDTO(Builders.entityToDTO(medico.getUser()));
+        if(medico.getUser() != null) {
+            medicoDTO.setUserDTO(Builders.entityToDTO(medico.getUser()));
+        }
         return medicoDTO;
     }
 
@@ -113,7 +131,9 @@ public class Builders {
         medico.setId(medicoDTO.getId());
         medico.setNome(medicoDTO.getNome());
         medico.setCognome(medicoDTO.getCognome());
-        medico.setUser(Builders.DTOToEntity(medicoDTO.getUserDTO()));
+        if(medicoDTO.getUserDTO() != null) {
+            medico.setUser(Builders.DTOToEntity(medicoDTO.getUserDTO()));
+        }
         return medico;
     }
 
@@ -128,7 +148,9 @@ public class Builders {
         pazienteDTO.setCodiceFiscale(paziente.getCodiceFiscale());
         pazienteDTO.setComuneDiResidenza(paziente.getComuneDiResidenza());
         pazienteDTO.setNumeroDiTelefono(paziente.getNumeroDiTelefono());
-        pazienteDTO.setUserDTO(Builders.entityToDTO(paziente.getUser()));
+        if(paziente.getUser() != null) {
+            pazienteDTO.setUserDTO(Builders.entityToDTO(paziente.getUser()));
+        }
         return pazienteDTO;
     }
 
@@ -141,7 +163,9 @@ public class Builders {
         paziente.setCodiceFiscale(pazienteDTO.getCodiceFiscale());
         paziente.setComuneDiResidenza(pazienteDTO.getComuneDiResidenza());
         paziente.setNumeroDiTelefono(pazienteDTO.getNumeroDiTelefono());
-        paziente.setUser(Builders.DTOToEntity(pazienteDTO.getUserDTO()));
+        if(pazienteDTO.getUserDTO() != null) {
+            paziente.setUser(Builders.DTOToEntity(pazienteDTO.getUserDTO()));
+        }
         return paziente;
     }
 
@@ -151,7 +175,9 @@ public class Builders {
         userDTO.setUsername(user.getUsername());
         userDTO.setEmail(user.getEmail());
         userDTO.setPassword(user.getPassword());
-        userDTO.setGroupDTO(Builders.entityToDTO(user.getGruppo()));
+        if(user.getGruppo() != null) {
+            userDTO.setGroupDTO(Builders.entityToDTO(user.getGruppo()));
+        }
         return userDTO;
     }
 
@@ -161,7 +187,9 @@ public class Builders {
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
-        user.setGruppo(Builders.DTOToEntity(userDTO.getGroupDTO()));
+        if(userDTO.getGroupDTO() != null) {
+            user.setGruppo(Builders.DTOToEntity(userDTO.getGroupDTO()));
+        }
         return user;
     }
 
