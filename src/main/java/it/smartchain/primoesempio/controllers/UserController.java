@@ -6,6 +6,7 @@ import it.smartchain.primoesempio.dtos.UtentiDTO;
 import it.smartchain.primoesempio.exceptions.NoGroupException;
 import it.smartchain.primoesempio.services.PrimoService;
 import it.smartchain.primoesempio.services.UserService;
+import it.smartchain.primoesempio.utilities.AngularErrorResponse;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.lang3.StringUtils;
@@ -134,21 +135,17 @@ public class UserController {
     public ResponseEntity<Object> loginUser(@RequestBody LoginDataDTO loginDataDTO) {
         try {
             if (StringUtils.isNotBlank(loginDataDTO.getEmail()) && StringUtils.isNotBlank(loginDataDTO.getPassword())) {
-
                 return ResponseEntity.ok(userService.loginUser(loginDataDTO));
             } else {
-                Map<String, String> mappa = new HashMap<>();
-                mappa.put("error", "Errore nella login dello user, password o email sono vuoti");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mappa);
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse("Email o password non sono presenti"));
             }
         } catch (EntityNotFoundException e) {
-            Map<String, String> mappa = new HashMap<>();
-            mappa.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mappa);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse(e.getMessage()));
         } catch (Exception e) {
-            Map<String, String> mappa = new HashMap<>();
-            mappa.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mappa);
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse(e.getMessage()));
         }
 
     }
