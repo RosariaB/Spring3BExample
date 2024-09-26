@@ -3,6 +3,7 @@ package it.smartchain.primoesempio.controllers;
 import it.smartchain.primoesempio.dtos.PazienteConCartellaDTO;
 import it.smartchain.primoesempio.dtos.PazienteDTO;
 import it.smartchain.primoesempio.services.PazienteService;
+import it.smartchain.primoesempio.utilities.AngularErrorResponse;
 import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,11 +20,11 @@ public class PazienteController {
     PazienteService pazienteService;
 
     @GetMapping("/get-username-by-paziente-id")
-    public ResponseEntity<String> dammiUsernameByPazienteId(@RequestParam Long id) {
+    public ResponseEntity<?> dammiUsernameByPazienteId(@RequestParam Long id) {
         if (id != null) {
             return ResponseEntity.ok(pazienteService.dammiUserNamePaziente(id));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Inserire un id valido");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse("Inserire un id valido"));
         }
     }
 
@@ -36,11 +37,11 @@ public class PazienteController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
         } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AngularErrorResponse(e.getMessage()));
         } catch (EntityExistsException es) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(es.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse(es.getMessage()));
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse(ex.getMessage()));
         }
     }
 
@@ -52,7 +53,7 @@ public class PazienteController {
         } catch (NoSuchElementException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse(ex.getMessage()));
         }
     }
 
@@ -64,20 +65,20 @@ public class PazienteController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse(ex.getMessage()));
         }
 
     }
 
     @GetMapping("/get-lista-pazienti")
-    public ResponseEntity<List<PazienteConCartellaDTO>> dammiListaPazienti() {
+    public ResponseEntity<?> dammiListaPazienti() {
         try {
             return ResponseEntity.ok(pazienteService.dammiListaDiPazientiConCartella());
         } catch (NoSuchElementException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AngularErrorResponse(ex.getMessage()));
 
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse(ex.getMessage()));
         }
     }
 
@@ -92,13 +93,13 @@ public class PazienteController {
             }
             return ResponseEntity.ok(pazienteService.modiicaPaziente(paziente, pazienteId, userid));
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse(ex.getMessage()));
 
         } catch (NoSuchElementException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AngularErrorResponse(ex.getMessage()));
 
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse(ex.getMessage()));
         }
     }
 
@@ -112,9 +113,9 @@ public class PazienteController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Errore nella cancellazione del paziente");
             }
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse(e.getMessage()));
         }
     }
 }

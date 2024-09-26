@@ -2,6 +2,7 @@ package it.smartchain.primoesempio.controllers;
 
 import it.smartchain.primoesempio.dtos.ImmagineDTO;
 import it.smartchain.primoesempio.services.ImmaginiService;
+import it.smartchain.primoesempio.utilities.AngularErrorResponse;
 import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,26 +44,26 @@ public class ImmagineController {
             return ResponseEntity.ok(immaginiService.creaImmagine(immagineDTO, idDato));
 
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la lettura del file");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse("Errore durante la lettura del file"));
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse(ex.getMessage()));
         }
     }
 
 
     @DeleteMapping("/elimina-immagine")
-    public ResponseEntity eliminaImmagine(@RequestParam Long datoId) {
+    public ResponseEntity<?> eliminaImmagine(@RequestParam Long datoId) {
         try {
             if (datoId != null) {
                 immaginiService.eliminaImmagine(datoId);
                 return ResponseEntity.ok("Immagini eliminate");
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse("Errore immagine non eliminata"));
             }
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse(e.getMessage()));
         }
 
     }
@@ -71,15 +72,15 @@ public class ImmagineController {
     public ResponseEntity<Object> dammiImmagini(@RequestParam Long immagineId){
         try{
             if (immagineId == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'id non deve essere nullo");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse("L'id non deve essere nullo"));
             }
             return ResponseEntity.ok(immaginiService.dammiImmagine(immagineId));
         }
         catch (NoSuchElementException c){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(c.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse(c.getMessage()));
         }
         catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse(e.getMessage()));
         }
     }
 
@@ -87,33 +88,33 @@ public class ImmagineController {
     public ResponseEntity<Object> dammiImmaginiBase64(@RequestParam Long immagineId){
         try{
             if (immagineId == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'id non deve essere nullo");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse("L'id non deve essere nullo"));
             }
             return ResponseEntity.ok(immaginiService.dammiImmagineBase64(immagineId));
         }
         catch (NoSuchElementException c){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(c.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse(c.getMessage()));
         }
         catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse(e.getMessage()));
         }
     }
 
 
 
     @DeleteMapping("/elimina-immagine-by-id")
-    public ResponseEntity eliminaImmagineById(@RequestParam Long id) {
+    public ResponseEntity<?> eliminaImmagineById(@RequestParam Long id) {
         try {
             if (id != null) {
                 immaginiService.eliminaImmaginePerId(id);
                 return ResponseEntity.ok("Immagini eliminate");
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse("Immagini non eliminate."));
             }
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse(e.getMessage()));
         }
     }
 
@@ -123,12 +124,12 @@ public class ImmagineController {
             if (immagineDTO != null) {
                 return ResponseEntity.ok(immaginiService.modificaImmagine(immagineDTO, id, datoId));
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'immagine inserita non può essere nulla");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AngularErrorResponse("L'immagine inserita non può essere nulla"));
             }
         } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new AngularErrorResponse(e.getMessage()));
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AngularErrorResponse(ex.getMessage()));
         }
     }
 
