@@ -70,7 +70,7 @@ public class UserService {
 
 
     @Transactional
-    public UtentiDTO createUser(UtentiDTO utentiDTO) throws NoGroupException, NoSuchFieldException {
+    public UtentiDTO createUser(UtentiDTO utentiDTO) throws NoSuchFieldException {
         User user = Builders.DTOToEntity(utentiDTO.getUserDTO());
         if (user.getId() != null) {
             Optional<User> userFound = userRepository.findById(user.getId());

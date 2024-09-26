@@ -5,7 +5,7 @@ import it.smartchain.primoesempio.entities.*;
 
 public class Builders {
 
-    public static AmministratoreDTO entityToDTO(Amministratore amministratore){
+    public static AmministratoreDTO entityToDTO(Amministratore amministratore) {
         AmministratoreDTO amministratoreDTO = new AmministratoreDTO();
         amministratoreDTO.setId(amministratore.getId());
         if(amministratore.getUser() != null){
@@ -14,7 +14,7 @@ public class Builders {
         return amministratoreDTO;
     }
 
-    public static Amministratore DTOToEntity(AmministratoreDTO amministratoreDTO){
+    public static Amministratore DTOToEntity(AmministratoreDTO amministratoreDTO) {
         Amministratore amministratore = new Amministratore();
         amministratore.setId(amministratoreDTO.getId());
         if(amministratoreDTO.getUser() != null) {
@@ -64,7 +64,6 @@ public class Builders {
         return datoDTO;
     }
 
-
     public static Dato DTOToEntity(DatoDTO datoDTO) {
         Dato dato = new Dato();
         dato.setId(datoDTO.getId());
@@ -74,25 +73,21 @@ public class Builders {
         return dato;
     }
 
-
-
-
-
-    public static GroupDTO entityToDTO(Group group){
+    public static GroupDTO entityToDTO(Group group) {
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setId(group.getId());
         groupDTO.setGroupName(group.getGroupName());
         return groupDTO;
     }
 
-    public static Group DTOToEntity(GroupDTO groupDTO){
+    public static Group DTOToEntity(GroupDTO groupDTO) {
         Group group = new Group();
         group.setId(groupDTO.getId());
         group.setGroupName(groupDTO.getGroupName());
         return group;
     }
 
-    public static ImmagineDTO entityToDTO(Immagine immagine){
+    public static ImmagineDTO entityToDTO(Immagine immagine) {
         ImmagineDTO immagineDTO = new ImmagineDTO();
         immagineDTO.setId(immagine.getId());
         immagineDTO.setNome(immagine.getNome());
@@ -104,7 +99,7 @@ public class Builders {
 
     }
 
-    public static Immagine DTOToEntity(ImmagineDTO immagineDTO){
+    public static Immagine DTOToEntity(ImmagineDTO immagineDTO) {
         Immagine immagine = new Immagine();
         immagine.setId(immagineDTO.getId());
         immagine.setNome(immagineDTO.getNome());
@@ -115,7 +110,7 @@ public class Builders {
         return immagine;
     }
 
-    public static MedicoDTO entityToDTO(Medico medico){
+    public static MedicoDTO entityToDTO(Medico medico) {
         MedicoDTO medicoDTO = new MedicoDTO();
         medicoDTO.setId(medico.getId());
         medicoDTO.setNome(medico.getNome());
@@ -126,7 +121,7 @@ public class Builders {
         return medicoDTO;
     }
 
-    public static Medico DTOToEntity(MedicoDTO medicoDTO){
+    public static Medico DTOToEntity(MedicoDTO medicoDTO) {
         Medico medico = new Medico();
         medico.setId(medicoDTO.getId());
         medico.setNome(medicoDTO.getNome());
@@ -137,9 +132,7 @@ public class Builders {
         return medico;
     }
 
-
-
-    public static PazienteDTO entityToDTO(Paziente paziente){
+    public static PazienteDTO entityToDTO(Paziente paziente) {
         PazienteDTO pazienteDTO = new PazienteDTO();
         pazienteDTO.setId(paziente.getId());
         pazienteDTO.setNome(paziente.getNome());
@@ -154,7 +147,7 @@ public class Builders {
         return pazienteDTO;
     }
 
-    public static Paziente DTOToEntity(PazienteDTO pazienteDTO){
+    public static Paziente DTOToEntity(PazienteDTO pazienteDTO) {
         Paziente paziente = new Paziente();
         paziente.setId(pazienteDTO.getId());
         paziente.setNome(pazienteDTO.getNome());
@@ -169,7 +162,7 @@ public class Builders {
         return paziente;
     }
 
-    public static UserDTO entityToDTO(User user){
+    public static UserDTO entityToDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setUsername(user.getUsername());
@@ -181,7 +174,7 @@ public class Builders {
         return userDTO;
     }
 
-    public static User DTOToEntity(UserDTO userDTO){
+    public static User DTOToEntity(UserDTO userDTO) {
         User user = new User();
         user.setId(userDTO.getId());
         user.setUsername(userDTO.getUsername());
@@ -194,4 +187,3 @@ public class Builders {
     }
 
 }
-
