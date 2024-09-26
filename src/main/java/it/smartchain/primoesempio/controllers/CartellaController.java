@@ -2,6 +2,7 @@ package it.smartchain.primoesempio.controllers;
 
 import it.smartchain.primoesempio.dtos.CartellaClinicaDTO;
 import it.smartchain.primoesempio.dtos.UtentiDTO;
+import it.smartchain.primoesempio.exceptions.CartellaClinicaException;
 import it.smartchain.primoesempio.services.CartellaService;
 import it.smartchain.primoesempio.services.UserService;
 import jakarta.persistence.EntityExistsException;
@@ -23,10 +24,10 @@ public class CartellaController {
 
 
     @PostMapping("/crea-cartella")
-    public ResponseEntity<Object> creaCartella(@RequestBody CartellaClinicaDTO cartellaClinicaDTO) {
+    public ResponseEntity<Object> creaCartella(@RequestParam Long medicoId, @RequestParam Long pazienteId) {
        try{
-           if (cartellaClinicaDTO != null) {
-               return ResponseEntity.ok(cartellaService.creaCartella(cartellaClinicaDTO));
+           if ( medicoId != null && pazienteId!= null) {
+               return ResponseEntity.ok(cartellaService.creaCartella(medicoId,pazienteId));
            } else {
                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La cartella inviata non ha un id paziente e/o id medico");
            }
@@ -68,6 +69,19 @@ public class CartellaController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'id non può essere nullo");
         }
     }
+
+
+
+    @GetMapping("/get-by-paziente-id")
+    public ResponseEntity<Object> dammiCartellaByPazienteId(@RequestParam Long pazienteId) throws CartellaClinicaException {
+        if(pazienteId != null) {
+            return ResponseEntity.ok(cartellaService.dammiCartellaByPazienteId(pazienteId));
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'id non può essere nullo");
+        }
+    }
+
 
     @GetMapping("/get-paziente-by-id")
     public ResponseEntity<Object> dammiPazienteIdByCartella(@RequestParam Long id) {

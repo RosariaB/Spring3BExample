@@ -6,6 +6,7 @@ public class ListaDatiDTO {
     private AnagraficaUtentiDTO anagrafica;
     private List<DatoDTO> dati;
 
+
     public ListaDatiDTO(AnagraficaUtentiDTO anagrafica, List<DatoDTO> dati) {
         this.anagrafica = anagrafica;
         this.dati = dati;

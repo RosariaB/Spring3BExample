@@ -16,6 +16,7 @@ public class PazienteDTO implements Serializable {
     private String numeroDiTelefono;
     private UserDTO userDTO;
 
+
     public PazienteDTO() {
 
     }

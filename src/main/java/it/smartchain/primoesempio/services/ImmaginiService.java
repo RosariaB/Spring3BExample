@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -45,12 +46,14 @@ public class ImmaginiService {
             }
             Dato dato = datoOptional.get();
             immagine.setDato(dato);
-            String pathFile = Paths.get(salvataggioImmagine, LocalDateTime.now().toString()).toString();
+            String pathFile = Paths.get(salvataggioImmagine,
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"))).toString();
             immagine.setFile(pathFile);
             File file = new File(pathFile); // creo la classe file
             try(FileOutputStream fos = new FileOutputStream(file)) { // creo un file (oggetto della classe) ma vuoto
                 fos.write(immagineDTO.getBytes()); // riempio il file passando l'array di byte
             }
+
 
         }
         return Builders.entityToDTO(immagineRepository.save(immagine));

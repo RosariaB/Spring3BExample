@@ -1,5 +1,6 @@
 package it.smartchain.primoesempio.controllers;
 
+import it.smartchain.primoesempio.dtos.PazienteConCartellaDTO;
 import it.smartchain.primoesempio.dtos.PazienteDTO;
 import it.smartchain.primoesempio.services.PazienteService;
 import jakarta.persistence.EntityExistsException;
@@ -69,9 +70,9 @@ public class PazienteController {
     }
 
     @GetMapping("/get-lista-pazienti")
-    public ResponseEntity<List<PazienteDTO>> dammiListaPazienti() {
+    public ResponseEntity<List<PazienteConCartellaDTO>> dammiListaPazienti() {
         try {
-            return ResponseEntity.ok(pazienteService.dammiListaDiPazienti());
+            return ResponseEntity.ok(pazienteService.dammiListaDiPazientiConCartella());
         } catch (NoSuchElementException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 

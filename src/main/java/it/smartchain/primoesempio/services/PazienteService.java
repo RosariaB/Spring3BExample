@@ -1,6 +1,7 @@
 package it.smartchain.primoesempio.services;
 
 import it.smartchain.primoesempio.builders.Builders;
+import it.smartchain.primoesempio.dtos.PazienteConCartellaDTO;
 import it.smartchain.primoesempio.dtos.PazienteDTO;
 import it.smartchain.primoesempio.entities.Paziente;
 import it.smartchain.primoesempio.entities.User;
@@ -33,12 +34,13 @@ public class PazienteService {
     @Autowired
     CartellaService cartellaService;
 
+
     public String dammiUserNamePaziente(Long id) {
         Optional<Paziente> pazienteOpt = pazienteRepository.findById(id);
         return pazienteOpt.orElseThrow().getUser().getUsername();
     }
 
-    public it.smartchain.primoesempio.dtos.PazienteDTO creaPaziente(it.smartchain.primoesempio.dtos.PazienteDTO pazienteDTO) throws NoSuchFieldException {
+    public PazienteDTO creaPaziente(PazienteDTO pazienteDTO) throws NoSuchFieldException {
         Paziente paziente = Builders.DTOToEntity(pazienteDTO);
         if (paziente.getUser().getId() != null) {
             Optional<User> userOptional = userRepository.findById(paziente.getUser().getId());
@@ -63,14 +65,14 @@ public class PazienteService {
 
     }
 
-    public it.smartchain.primoesempio.dtos.PazienteDTO dammiPazienteDTO(Long id) {
+    public PazienteDTO dammiPazienteDTO(Long id) {
         Optional<Paziente> pazienteopt = pazienteRepository.findById(id);
         if (pazienteopt.isEmpty()) {
             throw new NoSuchElementException("Il paziente non è presente");
         }
         Paziente paziente = pazienteopt.get();
 
-        it.smartchain.primoesempio.dtos.PazienteDTO pazienteDTO = new it.smartchain.primoesempio.dtos.PazienteDTO();
+        PazienteDTO pazienteDTO = new PazienteDTO();
 
         pazienteDTO.setId(paziente.getId());
         pazienteDTO.setNome(paziente.getNome());
@@ -81,7 +83,7 @@ public class PazienteService {
         return pazienteDTO;
     }
 
-    public it.smartchain.primoesempio.dtos.PazienteDTO dammiPazienteDTOBuilder(Long id) {
+    public PazienteDTO dammiPazienteDTOBuilder(Long id) {
         Optional<Paziente> pazienteopt = pazienteRepository.findById(id);
         if (pazienteopt.isEmpty()) {
             throw new NoSuchElementException("Il paziente non è presente");
@@ -91,7 +93,7 @@ public class PazienteService {
         return Builders.entityToDTO(paziente);
     }
 
-    public it.smartchain.primoesempio.dtos.PazienteDTO trovaPaziente(String nome, String cognome) {
+    public PazienteDTO trovaPaziente(String nome, String cognome) {
         //Paziente paziente = pazienteRepository.findByNomeAndCognome(nome,cognome); // Method query
         //Paziente paziente = pazienteRepository.trovaInBaseANomeeCognome(nome, cognome); //JPQL query
         Paziente paziente = pazienteRepository.cercaPerNomeeCognome(nome, cognome); //Native Query
@@ -111,7 +113,40 @@ public class PazienteService {
         return listaPazientiDTO;
     }
 
-    public it.smartchain.primoesempio.dtos.PazienteDTO modiicaPaziente(it.smartchain.primoesempio.dtos.PazienteDTO pazienteDTO, Long pazienteId, Long userid){
+
+
+    public List<PazienteConCartellaDTO> dammiListaDiPazientiConCartella() {
+
+        // Ottieni la lista dei pazienti dal repository
+        List<Paziente> listaPazienti = pazienteRepository.findAll();
+        if (listaPazienti.isEmpty()) {
+            throw new NoSuchElementException("Non ci sono pazienti");
+        }
+
+        // Trasforma la lista dei pazienti in DTO con cartella clinica associata
+        List<PazienteConCartellaDTO> listaPazientiConCartella = listaPazienti.stream().map(paziente -> {
+            // Converti Paziente in PazienteDTO
+            PazienteDTO pazienteDTO = Builders.entityToDTO(paziente);
+
+            // Recupera l'ID della cartella clinica associata
+
+            Long cartellaId = null;
+            try {
+                cartellaId = cartellaService.dammiCartellaByPazienteId(pazienteDTO.getId());
+            } catch (CartellaClinicaException e) {
+                log.error("Il paziente non ha la cartela associata");
+            }
+
+
+            // Crea un PazienteConCartellaDTO
+            return new PazienteConCartellaDTO(pazienteDTO, cartellaId);
+        }).toList();
+
+        return listaPazientiConCartella;
+    }
+
+
+    public PazienteDTO modiicaPaziente(PazienteDTO pazienteDTO, Long pazienteId, Long userid){
         Optional<Paziente> pazienteOptional = pazienteRepository.findById(pazienteId);
         if(pazienteOptional.isEmpty()){
             throw new NoSuchElementException("Il paziente da modificare non è stato trovato");

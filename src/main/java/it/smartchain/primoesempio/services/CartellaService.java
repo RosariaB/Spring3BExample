@@ -39,17 +39,17 @@ public class CartellaService {
     ImmagneRepository immagneRepository;
 
 
-    public CartellaClinicaDTO creaCartella(CartellaClinicaDTO cartellaClinicaDTO) {
-        CartellaClinica cartellaClinica = Builders.DTOToEntity(cartellaClinicaDTO);
-        if (cartellaClinica.getMedico() != null && cartellaClinica.getMedico().getId() != null && cartellaClinica.getPaziente() != null && cartellaClinica.getPaziente().getId() != null) {
-            Optional<Paziente> pazienteOptional = pazienteRepository.findById(cartellaClinica.getPaziente().getId());
-            Optional<Medico> medicoOptional = medicoRepository.findById(cartellaClinica.getMedico().getId());
+    public CartellaClinicaDTO creaCartella(Long medicoId, Long pazienteId) {
+        CartellaClinica cartellaClinica = new CartellaClinica();
+        if (medicoId != null && pazienteId != null) {
+            Optional<Paziente> pazienteOptional = pazienteRepository.findById(pazienteId);
+            Optional<Medico> medicoOptional = medicoRepository.findById(medicoId);
             if (pazienteOptional.isEmpty() || medicoOptional.isEmpty()) {
                 throw new NoSuchElementException("Il paziente e/o il medico non esiste");
             }
             Medico medico = medicoOptional.get();
             Paziente paziente = pazienteOptional.get();
-            List<CartellaClinica> cartellaOptional = cartellaRepository.trovaInBaseAlPazienteId(cartellaClinica.getPaziente().getId());
+            List<CartellaClinica> cartellaOptional = cartellaRepository.trovaInBaseAlPazienteId(pazienteId);
             if (!cartellaOptional.isEmpty()) {
                 throw new EntityExistsException("La cartella è stata già assegnata ad un paziente");
             }
@@ -73,6 +73,22 @@ public class CartellaService {
         }
     }
 
+    public Long dammiCartellaByPazienteId(Long pazienteId) throws NullPointerException, CartellaClinicaException {
+        List<CartellaClinica> cartella = cartellaRepository.trovaInBaseAlPazienteId(pazienteId);
+        if (cartella.size() > 1) {
+            throw new CartellaClinicaException("Non è possibile avere più di una cartella clinica, contattare l'amministratote");
+        }
+        if (cartella.isEmpty()) {
+            throw new CartellaClinicaException("La cartella è vuota");
+        }
+        CartellaClinica cartellaClinica = cartella.get(0);
+        if (cartellaClinica.getId() == null) {
+            throw new CartellaClinicaException("Il paziente non ha una cartella clinica");
+        }
+        return cartellaClinica.getId();
+
+    }
+
     public Long dammiPaziente(Long id) {
         Optional<CartellaClinica> cartellaOpt = cartellaRepository.findById(id);
         return cartellaOpt.orElseThrow().getPaziente().getId();
@@ -93,7 +109,7 @@ public class CartellaService {
     }
 
     public List<CartellaClinicaDTO> dammiListaDelleCartelle(UtentiDTO utentiDTO) {
-        if(utentiDTO.getMedicoDTO() == null) {
+        if (utentiDTO.getMedicoDTO() == null) {
             throw new NullPointerException("L'utente che sta effettando l'opreazione non è medico");
         }
         List<CartellaClinica> listacartelle = cartellaRepository.trovaInBaseAlMedicoId(utentiDTO.getMedicoDTO().getId());
@@ -106,7 +122,7 @@ public class CartellaService {
         //map --> torna un collector, uno stream
     }
 
-    public CartellaClinicaDTO modificaCartella(it.smartchain.primoesempio.dtos.CartellaClinicaDTO cartellaClinicaDTO, Long id) {
+    public CartellaClinicaDTO modificaCartella(CartellaClinicaDTO cartellaClinicaDTO, Long id) {
         CartellaClinica cartella = Builders.DTOToEntity(cartellaClinicaDTO);
         Optional<CartellaClinica> cartellaClinicaOptional = cartellaRepository.findById(id);
         if (cartellaClinicaOptional.isEmpty()) {
@@ -132,7 +148,7 @@ public class CartellaService {
 
     public void eliminaCartella(Long medicoId, Long cartellaId) {
         Optional<Medico> medico = medicoRepository.findById(medicoId);
-        if(medico.isEmpty()){
+        if (medico.isEmpty()) {
             throw new NoSuchElementException(("Il medico non è presente"));
         }
         Optional<CartellaClinica> cartella = cartellaRepository.findById(cartellaId);

@@ -4,10 +4,15 @@ import it.smartchain.primoesempio.dtos.ImmagineDTO;
 import it.smartchain.primoesempio.services.ImmaginiService;
 import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Date;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -16,23 +21,34 @@ public class ImmagineController {
     @Autowired
     ImmaginiService immaginiService;
 
-    @PostMapping(value = "/crea-immagine")
-    public ResponseEntity<Object> creaImmagine(@RequestBody ImmagineDTO immagineDTO, @RequestParam Long datoId) {
-        try {
-            if (immagineDTO != null) {
-                return ResponseEntity.ok(immaginiService.creaImmagine(immagineDTO, datoId));
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-            }
-        } catch (NoSuchElementException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    @PostMapping(value = "/crea-immagine", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Object> creaImmagine(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("nome") String nome,
+            @RequestParam("dataInserimento") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInserimento,
+            @RequestParam("tipo") String tipo,
+            @RequestParam("idDato") Long idDato) {
 
-        } catch (EntityExistsException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (Exception es) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(es.getMessage());
+        try {
+            // Convert MultipartFile to byte[]
+            byte[] bytes = file.getBytes();
+
+            ImmagineDTO immagineDTO = new ImmagineDTO();
+            immagineDTO.setNome(nome);
+            immagineDTO.setDataInserimento(dataInserimento);
+            immagineDTO.setTipo(tipo);
+            immagineDTO.setBytes(bytes);
+            immagineDTO.setIdDato(idDato);
+
+            return ResponseEntity.ok(immaginiService.creaImmagine(immagineDTO, idDato));
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Errore durante la lettura del file");
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
+
 
     @DeleteMapping("/elimina-immagine")
     public ResponseEntity eliminaImmagine(@RequestParam Long datoId) {
